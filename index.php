@@ -34,10 +34,16 @@
         </span>
 
         <input type="text" class="form-control" placeholder="enter image title text" id="image_title_text">
+        <span class="input-group-addon">
+          <button type="button" class="btn btn-default btn-xs" id="send_snapshots">
+            send snapshot
+          </button>
 
+        </span>
       </div>
 
     </div>
+
 
       </div>
         </div>
@@ -66,6 +72,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="jpeg_camera/jpeg_camera_with_dependencies.min.js" type="text/javascript"></script>
 <script>
+ var snapshot = undefined;//holds the utitlty to take pics and send
     var options = {
       shutter_ogg_url: "jpeg_camera/shutter.ogg",
       shutter_mp3_url: "jpeg_camera/shutter.mp3",
@@ -74,15 +81,19 @@
     var camera = new JpegCamera("#camera", options);
 
   $('#take_snapshots').click(function(){
-    var snapshot = camera.capture();
+     snapshot= camera.capture();
     snapshot.show();
 
-    snapshot.upload({api_url: "action.php?image_title_text=" +$('#image_title_text').val()}).done(function(response) {
+
+});
+
+$('#send_snapshots').click(function(){
+  snapshot.upload({api_url: "action.php?image_title_text=" +$('#image_title_text').val()}).done(function(response) {
 $('#imagelist').prepend("<tr><td><img src='"+response+"' width='100px' height='100px'></td><td>"+response+"</td></tr>");
 }).fail(function(response) {
-  alert("Upload failed with status " + response);
+alert("Upload failed with status " + response);
 });
-})
+});
 
 function done(){
     $('#snapshots').html("uploaded");
