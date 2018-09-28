@@ -2,27 +2,28 @@
 require_once( dirname( __FILE__ ) . '/connectionClass.php' );
 class webcamClass extends connectionClass{
     private $imageFolder="webcamImage/";
-    
+
     //This function will create a new name for every image captured using the current data and time.
     private function getNameWithPath(){
         $name = $this->imageFolder.date('YmdHis').".jpg";
         return $name;
     }
-    
+
     //function will get the image data and save it to the provided path with the name and save it to the database
     public function showImage(){
         $file = file_put_contents( $this->getNameWithPath(), file_get_contents('php://input') );
+        $image_title_text = $_REQUEST['image_title_text'];//get image_title_text from url params
         if(!$file){
             return "ERROR: Failed to write data to ".$this->getNameWithPath().", check permissions\n";
         }
         else
         {
-            $this->saveImageToDatabase($this->getNameWithPath());         // this line is for saveing image to database
+            $this->saveImageToDatabase($this->getNameWithPath(),$image_title_text);         // this line is for saveing image to database
             return $this->getNameWithPath();
         }
-        
+
     }
-    
+
     //function for changing the image to base64
     public function changeImagetoBase64($image){
         $path = $image;
@@ -31,12 +32,12 @@ class webcamClass extends connectionClass{
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         return $base64;
     }
-    
-    public function saveImageToDatabase($imageurl){
+
+    public function saveImageToDatabase($imageurl,$image_title_text){
         $image=$imageurl;
 //        $image=  $this->changeImagetoBase64($image);          //if you want to go for base64 encode than enable this line
         if($image){
-            $query="Insert into snapshot (Image) values('$image')";
+            $query="Insert into snapshot (Image,image_title_text) values('$image','$image_title_text')";
             $result= $this->query($query);
             if($result){
                 return "Image saved to database";
@@ -46,6 +47,6 @@ class webcamClass extends connectionClass{
             }
         }
     }
-    
-    
+
+
 }

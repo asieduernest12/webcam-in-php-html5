@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `snapshot` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Image` varchar(20000) NOT NULL,
+  `image_title_text` varchar (512) NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
